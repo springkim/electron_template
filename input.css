@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+:root {
+    --primary-color: #e04d45;
+    --primary-rgb: 224, 77, 69;
+}
+
+#titlebar {
+    -webkit-app-region: drag;
+    height: 32px;
+    line-height: 32px;
+    padding-left: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: #222529;
+    color: #FFFFFF;
+}
+
+body {
+    padding: 50px 30px 30px;
+    background-color: #222529;
+    color: #FFFFFF;
+}
+
+/* 스크롤바 스타일링 */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #222529;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    border: 2px solid #222529;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+::-webkit-scrollbar-corner {
+    background: #222529;
+}
+
+.color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s;
+    outline: none;
+    padding: 0;
+}
+
+.color-swatch:hover {
+    transform: scale(1.15);
+}
+
+.color-swatch.active {
+    border-color: #fff;
+    box-shadow: 0 0 0 2px var(--primary-color);
+    transform: scale(1.1);
+}
+
+/* Custom Dropdown/Select logic (Tailwind로 대체 가능하지만 기존 로직 유지) */
+.custom-select-dropdown {
+    position: relative;
+}
+
+.custom-select-dropdown .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    background-color: #222529;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.375rem;
+    padding: 0.25rem 0;
+    margin-top: 2px;
+}
+
+.custom-select-dropdown.show .dropdown-menu {
+    display: block;
+}
+
+.custom-select-dropdown .dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    color: #FFFFFF;
+    text-decoration: none;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.custom-select-dropdown .dropdown-item:hover {
+    background-color: rgba(var(--primary-rgb), 0.15);
+    color: var(--primary-color);
+}
+
+.custom-select-dropdown .dropdown-item.active {
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+}

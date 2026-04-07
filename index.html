@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>설정</title>
+
+    <link rel="stylesheet" href="./output.css">
+    <style>
+        .form-select {
+            display: block;
+            width: 100%;
+            padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: inherit;
+            background-color: transparent;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.375rem;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+            appearance: none;
+            cursor: pointer;
+        }
+        .form-select:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(var(--primary-rgb), 0.25);
+        }
+        
+        /* Range (Volume) Styles */
+        .form-range {
+            width: 100%;
+            height: 1.5rem;
+            padding: 0;
+            background-color: transparent;
+            appearance: none;
+        }
+        .form-range:focus {
+            outline: 0;
+        }
+        .form-range::-webkit-slider-thumb {
+            width: 1rem;
+            height: 1rem;
+            margin-top: -0.25rem;
+            background-color: var(--primary-color);
+            border: 0;
+            border-radius: 1rem;
+            appearance: none;
+        }
+        .form-range::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 0.5rem;
+            color: transparent;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: transparent;
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-[#222529] text-white p-[50px_30px_30px]">
+<div id="titlebar"></div>
+<div class="mx-auto max-w-[500px]">
+    <h4 class="text-xl font-bold mb-4">설정</h4>
+    <!-- 테마 색상 -->
+    <div class="mb-4">
+        <label class="block mb-2 text-sm font-medium">테마 색상</label>
+        <div class="color-palette flex flex-wrap gap-2">
+            <button class="color-swatch active" data-color="#e04d45" style="background:#e04d45;" title="Red"></button>
+            <button class="color-swatch" data-color="#e79243" style="background:#e79243;" title="Orange"></button>
+            <button class="color-swatch" data-color="#f1cd47" style="background:#f1cd47;" title="Yellow"></button>
+            <button class="color-swatch" data-color="#71c367" style="background:#71c367;" title="Green"></button>
+            <button class="color-swatch" data-color="#6dc4b3" style="background:#6dc4b3;" title="Mint"></button>
+            <button class="color-swatch" data-color="#6cc0cd" style="background:#6cc0cd;" title="Teal"></button>
+            <button class="color-swatch" data-color="#6cbde3" style="background:#6cbde3;" title="Cyan"></button>
+            <button class="color-swatch" data-color="#5388f6" style="background:#5388f6;" title="Blue"></button>
+            <button class="color-swatch" data-color="#665aec" style="background:#665aec;" title="Indigo"></button>
+            <button class="color-swatch" data-color="#b544d8" style="background:#b544d8;" title="Purple"></button>
+        </div>
+    </div>
+    <!-- 언어 -->
+    <div class="mb-3">
+        <label class="block mb-2 text-sm font-medium">언어</label>
+        <div class="custom-select-dropdown" id="language">
+            <button class="form-select text-left" type="button" id="langBtn">
+                한국어
+            </button>
+            <ul class="dropdown-menu w-full">
+                <li><button class="dropdown-item active">한국어</button></li>
+                <li><button class="dropdown-item">English</button></li>
+                <li><button class="dropdown-item">日本語</button></li>
+                <li><button class="dropdown-item">简体中文</button></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 슬라이더 -->
+    <div class="mb-3">
+        <label class="block mb-2 text-sm font-medium">볼륨</label>
+        <input type="range" class="form-range" id="volume" min="0" max="100" value="75">
+    </div>
+
+    <div class="mb-4">
+        <label class="block mb-2 text-sm font-medium">저장 경로</label>
+        <div class="flex">
+            <input type="text" class="flex-1 bg-transparent border border-white/20 rounded-l px-3 py-2 focus:border-[var(--primary-color)] focus:outline-none" value="/Users/Downloads" id="savePath">
+            <button class="border border-white/20 border-l-0 rounded-r px-4 py-2 hover:bg-[var(--primary-color)] transition-colors" type="button" id="browseBtn">열기</button>
+        </div>
+    </div>
+
+    <!-- 버튼 -->
+    <div class="flex gap-2">
+        <button class="bg-[var(--primary-color)] text-white px-6 py-2 rounded hover:brightness-90 transition-all" id="saveBtn">저장</button>
+        <button class="border border-white/20 px-6 py-2 rounded hover:bg-[var(--primary-color)] transition-all" id="cancelBtn">취소</button>
+    </div>
+</div>
+
+<script>
+    // 드롭다운 토글 기능 구현 (Bootstrap 제거 대응)
+    const langBtn = document.getElementById('langBtn');
+    const langDropdown = document.getElementById('language');
+    
+    langBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        langDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', () => {
+        langDropdown.classList.remove('show');
+    });
+    // 시스템 테마 감지 및 적용
+    function applyTheme(isDark) {
+        // document.body.setAttribute('data-bs-theme', isDark ? 'dark' : 'light')
+        // document.getElementById('darkMode').checked = isDark
+    }
+
+    // 초기 적용
+    applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+    // DB에 저장된 색상이 있으면 초기 로드 시 반영하도록 요청 (또는 직접 적용)
+    // 여기서는 window.pxvy.onColorChanged가 메인에서 보내는 초기 색상을 받을 수 있도록 함
+    // HTML 로드 후 메인에 현재 색상을 한 번 더 요청 (did-finish-load가 이미 지나갔을 수 있으므로)
+    window.pxvy.onColorChanged((r, g, b) => {
+        const hex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+        document.documentElement.style.setProperty('--primary-color', hex);
+        document.documentElement.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
+
+        // swatch 활성화 상태 업데이트
+        document.querySelectorAll('.color-swatch').forEach(s => {
+            if (s.dataset.color.toLowerCase() === hex.toLowerCase()) {
+                document.querySelectorAll('.color-swatch').forEach(sw => sw.classList.remove('active'));
+                s.classList.add('active');
+            }
+        });
+    });
+
+    // 시스템 설정 변경 시 실시간 반영
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        applyTheme(e.matches)
+    })
+
+    // 시스템 볼륨 조절
+    document.getElementById('volume').addEventListener('input', (e) => {
+        const value = e.target.value;
+        window.pxvy.setVolume(value);
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', () => {
+        alert('설정이 저장되었습니다.')
+    })
+
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+        if (confirm('설정창을 닫으시겠습니까?')) {
+            window.close();
+        }
+    })
+
+    document.getElementById('browseBtn').addEventListener('click', () => {
+        alert('폴더 선택 창이 열립니다. (실제 구현은 메인 프로세스 통신 필요)')
+    })
+
+    document.querySelectorAll('#language .dropdown-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            // 1. 버튼 요소 선택 (위에서 추가한 클래스로 선택)
+            const btn = document.querySelector('#language .dropdown-toggle');
+
+            // 2. 기존 active 클래스 제거 및 클릭한 요소에 추가
+            document.querySelectorAll('#language .dropdown-item').forEach(i => i.classList.remove('active'));
+            e.currentTarget.classList.add('active');
+
+            // 3. 버튼 텍스트 변경 (trim으로 여백 제거)
+            const selectedText = e.currentTarget.textContent.trim();
+            btn.textContent = selectedText;
+
+            console.log('선택된 언어:', selectedText);
+        });
+    });
+
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.addEventListener('click', () => {
+            // active 이동
+            document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'))
+            swatch.classList.add('active')
+
+            // hex → r,g,b 분해 후 main으로 전달
+            const hex = swatch.dataset.color
+            const r = parseInt(hex.slice(1, 3), 16)
+            const g = parseInt(hex.slice(3, 5), 16)
+            const b = parseInt(hex.slice(5, 7), 16)
+
+            // CSS 변수 업데이트 (styles.css와 연동)
+            document.documentElement.style.setProperty('--primary-color', hex);
+            document.documentElement.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
+
+            window.pxvy.setColor(r, g, b)
+            console.log('색상 변경:', hex, r, g, b)
+        })
+    })
+</script>
+</body>
+</html>
