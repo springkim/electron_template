@@ -55,27 +55,20 @@ function createWindow() {
     const theme = getTheme()
 
     const win = new BrowserWindow({
-        width: 480,
+        width: 600,
         height: 800,
-        minWidth: 480,
-        minHeight: 600,
         title: '설정',
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         },
-        autoHideMenuBar: true,
-        menuBarVisible: false,
-        // Windows: 네이티브 타이틀바 숨김, Linux: 완전히 프레임리스
-        ...(is_windows ? {
-            titleBarStyle: 'hidden',
+        titleBarStyle: 'hidden',
+        // Windows 전용 옵션
+        ...(is_windows && {
             titleBarOverlay: {
                 color: theme.color,
                 symbolColor: theme.symbolColor,
                 height: 32
             }
-        } : {
-            transparent: true,
-            frame: false
         })
     })
 
@@ -94,29 +87,12 @@ function createWindow() {
         app.quit()
     })
 
-    // Linux/macOS 프레임리스 창용 커스텀 윈도우 컨트롤 IPC
-    // Windows는 titleBarOverlay가 네이티브 버튼을 제공하므로 불필요
-    if (!is_windows) {
-        ipcMain.on('window-minimize', (event) => {
-            BrowserWindow.fromWebContents(event.sender)?.minimize()
-        })
-        ipcMain.on('window-maximize', (event) => {
-            const w = BrowserWindow.fromWebContents(event.sender)
-            if (!w) return
-            w.isMaximized() ? w.unmaximize() : w.maximize()
-        })
-        ipcMain.on('window-close', (event) => {
-            BrowserWindow.fromWebContents(event.sender)?.close()
-        })
-    }
-
     nativeTheme.on('updated', () => {
-        console.log('[nativeTheme] updated, isDark:', nativeTheme.shouldUseDarkColors)
         const t = getTheme()
         if (is_windows) {
             win.setTitleBarOverlay({color: t.color, symbolColor: t.symbolColor, height: 32})
+            setWindowBorderColor?.(win, t.border)
         }
-        setWindowBorderColor?.(win, t.border)
     })
 
     win.show()
