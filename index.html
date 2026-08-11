@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>설정</title>
@@ -65,61 +65,123 @@
 <body class="bg-[#222529] text-white p-[50px_30px_30px]">
 <div id="titlebar"></div>
 <div class="mx-auto max-w-[500px]">
-    <h4 class="text-xl font-bold mb-4">설정</h4>
+    <h4 class="text-xl font-bold mb-4" data-i18n="settingsTitle">설정</h4>
     <!-- 테마 색상 -->
     <div class="mb-4">
-        <label class="block mb-2 text-sm font-medium">테마 색상</label>
+        <label class="block mb-2 text-sm font-medium" data-i18n="themeColor">테마 색상</label>
         <div class="color-palette flex flex-wrap gap-2">
-            <button class="color-swatch active" data-color="#e04d45" style="background:#e04d45;" title="Red"></button>
-            <button class="color-swatch" data-color="#e79243" style="background:#e79243;" title="Orange"></button>
-            <button class="color-swatch" data-color="#f1cd47" style="background:#f1cd47;" title="Yellow"></button>
-            <button class="color-swatch" data-color="#71c367" style="background:#71c367;" title="Green"></button>
-            <button class="color-swatch" data-color="#6dc4b3" style="background:#6dc4b3;" title="Mint"></button>
-            <button class="color-swatch" data-color="#6cc0cd" style="background:#6cc0cd;" title="Teal"></button>
-            <button class="color-swatch" data-color="#6cbde3" style="background:#6cbde3;" title="Cyan"></button>
-            <button class="color-swatch" data-color="#5388f6" style="background:#5388f6;" title="Blue"></button>
-            <button class="color-swatch" data-color="#665aec" style="background:#665aec;" title="Indigo"></button>
-            <button class="color-swatch" data-color="#b544d8" style="background:#b544d8;" title="Purple"></button>
+            <button class="color-swatch active" data-color="#e04d45" data-i18n-title="red" style="background:#e04d45;" title="빨강"></button>
+            <button class="color-swatch" data-color="#e79243" data-i18n-title="orange" style="background:#e79243;" title="주황"></button>
+            <button class="color-swatch" data-color="#f1cd47" data-i18n-title="yellow" style="background:#f1cd47;" title="노랑"></button>
+            <button class="color-swatch" data-color="#71c367" data-i18n-title="green" style="background:#71c367;" title="초록"></button>
+            <button class="color-swatch" data-color="#6dc4b3" data-i18n-title="mint" style="background:#6dc4b3;" title="민트"></button>
+            <button class="color-swatch" data-color="#6cc0cd" data-i18n-title="teal" style="background:#6cc0cd;" title="청록"></button>
+            <button class="color-swatch" data-color="#6cbde3" data-i18n-title="cyan" style="background:#6cbde3;" title="시안"></button>
+            <button class="color-swatch" data-color="#5388f6" data-i18n-title="blue" style="background:#5388f6;" title="파랑"></button>
+            <button class="color-swatch" data-color="#665aec" data-i18n-title="indigo" style="background:#665aec;" title="남색"></button>
+            <button class="color-swatch" data-color="#b544d8" data-i18n-title="purple" style="background:#b544d8;" title="보라"></button>
         </div>
     </div>
     <!-- 언어 -->
     <div class="mb-3">
-        <label class="block mb-2 text-sm font-medium">언어</label>
+        <label class="block mb-2 text-sm font-medium" data-i18n="language">언어</label>
         <div class="custom-select-dropdown" id="language">
             <button class="form-select text-left" type="button" id="langBtn">
                 한국어
             </button>
             <ul class="dropdown-menu w-full">
-                <li><button class="dropdown-item active">한국어</button></li>
-                <li><button class="dropdown-item">English</button></li>
-                <li><button class="dropdown-item">日本語</button></li>
-                <li><button class="dropdown-item">简体中文</button></li>
+                <li><button class="dropdown-item active" data-lang="ko">한국어</button></li>
+                <li><button class="dropdown-item" data-lang="en">English</button></li>
+                <li><button class="dropdown-item" data-lang="ja">日本語</button></li>
+                <li><button class="dropdown-item" data-lang="zh-CN">简体中文</button></li>
             </ul>
         </div>
     </div>
 
     <!-- 슬라이더 -->
     <div class="mb-3">
-        <label class="block mb-2 text-sm font-medium">볼륨</label>
+        <label class="block mb-2 text-sm font-medium" data-i18n="volume">볼륨</label>
         <input type="range" class="form-range" id="volume" min="0" max="100" value="75">
     </div>
 
     <div class="mb-4">
-        <label class="block mb-2 text-sm font-medium">저장 경로</label>
+        <label class="block mb-2 text-sm font-medium" data-i18n="savePath">저장 경로</label>
         <div class="flex">
-            <input type="text" class="flex-1 bg-transparent border border-white/20 rounded-l px-3 py-2 focus:border-[var(--primary-color)] focus:outline-none" value="/Users/Downloads" id="savePath">
-            <button class="border border-white/20 border-l-0 rounded-r px-4 py-2 hover:bg-[var(--primary-color)] transition-colors" type="button" id="browseBtn">열기</button>
+            <input type="text" class="flex-1 bg-transparent border border-white/20 rounded-l px-3 py-2 focus:border-[var(--primary-color)] focus:outline-none" value="" id="savePath">
+            <button class="border border-white/20 border-l-0 rounded-r px-4 py-2 hover:bg-[var(--primary-color)] transition-colors" type="button" id="browseBtn" data-i18n="browse">열기</button>
         </div>
     </div>
 
     <!-- 버튼 -->
     <div class="flex gap-2">
-        <button class="bg-[var(--primary-color)] text-white px-6 py-2 rounded hover:brightness-90 transition-all" id="saveBtn">저장</button>
-        <button class="border border-white/20 px-6 py-2 rounded hover:bg-[var(--primary-color)] transition-all" id="cancelBtn">취소</button>
+        <button class="bg-[var(--primary-color)] text-white px-6 py-2 rounded hover:brightness-90 transition-all" id="saveBtn" data-i18n="save">저장</button>
+        <button class="border border-white/20 px-6 py-2 rounded hover:bg-[var(--primary-color)] transition-all" id="cancelBtn" data-i18n="cancel">취소</button>
     </div>
 </div>
 
 <script>
+    const translations = {
+        ko: {
+            settingsTitle: '설정', themeColor: '테마 색상', language: '언어', volume: '볼륨',
+            savePath: '저장 경로', browse: '열기', save: '저장', cancel: '취소',
+            red: '빨강', orange: '주황', yellow: '노랑', green: '초록', mint: '민트',
+            teal: '청록', cyan: '시안', blue: '파랑', indigo: '남색', purple: '보라',
+            savedMessage: '설정이 저장되었습니다.', closeConfirm: '설정창을 닫으시겠습니까?',
+            browseDialogTitle: '저장 폴더 선택'
+        },
+        en: {
+            settingsTitle: 'Settings', themeColor: 'Theme color', language: 'Language', volume: 'Volume',
+            savePath: 'Save path', browse: 'Browse', save: 'Save', cancel: 'Cancel',
+            red: 'Red', orange: 'Orange', yellow: 'Yellow', green: 'Green', mint: 'Mint',
+            teal: 'Teal', cyan: 'Cyan', blue: 'Blue', indigo: 'Indigo', purple: 'Purple',
+            savedMessage: 'Settings have been saved.', closeConfirm: 'Do you want to close the settings window?',
+            browseDialogTitle: 'Select save folder'
+        },
+        ja: {
+            settingsTitle: '設定', themeColor: 'テーマカラー', language: '言語', volume: '音量',
+            savePath: '保存先', browse: '開く', save: '保存', cancel: 'キャンセル',
+            red: '赤', orange: 'オレンジ', yellow: '黄', green: '緑', mint: 'ミント',
+            teal: '青緑', cyan: 'シアン', blue: '青', indigo: '藍色', purple: '紫',
+            savedMessage: '設定を保存しました。', closeConfirm: '設定ウィンドウを閉じますか？',
+            browseDialogTitle: '保存フォルダーを選択'
+        },
+        'zh-CN': {
+            settingsTitle: '设置', themeColor: '主题颜色', language: '语言', volume: '音量',
+            savePath: '保存路径', browse: '打开', save: '保存', cancel: '取消',
+            red: '红色', orange: '橙色', yellow: '黄色', green: '绿色', mint: '薄荷色',
+            teal: '青绿色', cyan: '青色', blue: '蓝色', indigo: '靛蓝色', purple: '紫色',
+            savedMessage: '设置已保存。', closeConfirm: '是否关闭设置窗口？',
+            browseDialogTitle: '选择保存文件夹'
+        }
+    };
+    const languageOrder = ['ko', 'en', 'ja', 'zh-CN'];
+    let selectedLanguage = 'ko';
+
+    function applyLanguage(language) {
+        const messages = translations[language];
+        if (!messages) return;
+
+        selectedLanguage = language;
+        document.documentElement.lang = language;
+        document.title = messages.settingsTitle;
+
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            element.textContent = messages[element.dataset.i18n];
+        });
+        document.querySelectorAll('[data-i18n-title]').forEach(element => {
+            element.title = messages[element.dataset.i18nTitle];
+        });
+
+        document.querySelectorAll('#language .dropdown-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.lang === language);
+        });
+        langBtn.textContent = document.querySelector(
+            `#language .dropdown-item[data-lang="${language}"]`
+        ).textContent.trim();
+
+        window.pxvy.setLanguage(languageOrder.indexOf(language));
+    }
+
     // 드롭다운 토글 기능 구현 (Bootstrap 제거 대응)
     const langBtn = document.getElementById('langBtn');
     const langDropdown = document.getElementById('language');
@@ -170,35 +232,38 @@
     });
 
     document.getElementById('saveBtn').addEventListener('click', () => {
-        alert('설정이 저장되었습니다.')
+        alert(translations[selectedLanguage].savedMessage)
     })
 
     document.getElementById('cancelBtn').addEventListener('click', () => {
-        if (confirm('설정창을 닫으시겠습니까?')) {
+        if (confirm(translations[selectedLanguage].closeConfirm)) {
             window.close();
         }
     })
 
-    document.getElementById('browseBtn').addEventListener('click', () => {
-        alert('폴더 선택 창이 열립니다. (실제 구현은 메인 프로세스 통신 필요)')
+    const savePathInput = document.getElementById('savePath');
+
+    window.pxvy.getHomeDirectory().then(homeDirectory => {
+        savePathInput.value = homeDirectory;
+    });
+
+    document.getElementById('browseBtn').addEventListener('click', async () => {
+        const selectedPath = await window.pxvy.selectDirectory(
+            savePathInput.value,
+            translations[selectedLanguage].browseDialogTitle
+        );
+
+        if (selectedPath) {
+            savePathInput.value = selectedPath;
+        }
     })
 
     document.querySelectorAll('#language .dropdown-item').forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
 
-            // 1. 버튼 요소 선택 (위에서 추가한 클래스로 선택)
-            const btn = document.getElementById('langBtn');
-
-            // 2. 기존 active 클래스 제거 및 클릭한 요소에 추가
-            document.querySelectorAll('#language .dropdown-item').forEach(i => i.classList.remove('active'));
-            e.currentTarget.classList.add('active');
-
-            // 3. 버튼 텍스트 변경 (trim으로 여백 제거)
-            const selectedText = e.currentTarget.textContent.trim();
-            btn.textContent = selectedText;
-
-            console.log('선택된 언어:', selectedText);
+            applyLanguage(e.currentTarget.dataset.lang);
+            console.log('선택된 언어:', selectedLanguage);
         });
     });
 

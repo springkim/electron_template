@@ -9,5 +9,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
 contextBridge.exposeInMainWorld('pxvy', {
     onColorChanged: (callback) => callback(224, 77, 69),
     setColor: (r, g, b) => ipcRenderer.send('set-color', r, g, b),
+    setLanguage: (languageIndex) => ipcRenderer.send('set-language', languageIndex),
+    getHomeDirectory: () => ipcRenderer.invoke('get-home-directory'),
+    selectDirectory: (currentPath, title) => ipcRenderer.invoke('select-directory', currentPath, title),
     setVolume: () => {}
 })

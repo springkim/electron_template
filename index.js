@@ -1,9 +1,13 @@
-const {app, BrowserWindow, Menu, nativeTheme, ipcMain} = require('electron')
+const {app, BrowserWindow, Menu, nativeTheme, ipcMain, dialog} = require('electron')
 const path = require('path')
 
 const is_windows = process.platform === 'win32'
 const is_macOS = process.platform === 'darwin'
 const is_linux = process.platform === 'linux'
+const app_icon_path = path.join(
+    __dirname,
+    is_windows ? 'logo.ico' : is_macOS ? 'logo.icns' : 'logo.png'
+)
 
 if (is_linux) {
     app.disableHardwareAcceleration()
@@ -72,6 +76,34 @@ ipcMain.on('set-color', (event, r, g, b) => {
         }
     }
 })
+const titles = ['설정', 'Settings', '設定', '设置']
+
+ipcMain.on('set-language', (event, languageIndex) => {
+    if (!Number.isInteger(languageIndex) || !titles[languageIndex]) return
+
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (win && !win.isDestroyed()) {
+        win.setTitle(titles[languageIndex])
+    }
+})
+
+ipcMain.handle('get-home-directory', () => app.getPath('home'))
+
+ipcMain.handle('select-directory', async (event, currentPath, title) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    const options = {
+        title: typeof title === 'string' ? title : undefined,
+        defaultPath: typeof currentPath === 'string' && currentPath.trim()
+            ? currentPath
+            : app.getPath('home'),
+        properties: ['openDirectory', 'createDirectory']
+    }
+    const result = win && !win.isDestroyed()
+        ? await dialog.showOpenDialog(win, options)
+        : await dialog.showOpenDialog(options)
+
+    return result.canceled ? null : result.filePaths[0]
+})
 
 // ======================== 창 생성
 function createWindow() {
@@ -80,7 +112,10 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 600,
         height: 800,
+        minWidth: 500,
+        minHeight: 600,
         title: '설정',
+        icon: app_icon_path,
         backgroundColor: window_background_color,
         titleBarStyle: 'hidden',
         webPreferences: {
@@ -121,6 +156,11 @@ function createWindow() {
 // ======================== 앱 생명주기
 app.whenReady().then(() => {
     Menu.setApplicationMenu(null)
+
+    if (is_macOS) {
+        app.dock.setIcon(app_icon_path)
+    }
+
     createWindow()
 })
 

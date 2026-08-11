@@ -9,6 +9,17 @@
     "build": "npx @tailwindcss/cli -i input.css -o output.css --minify & electron-builder",
     "tailwind:watch": "npx @tailwindcss/cli -i input.css -o output.css --watch"
   },
+  "build": {
+    "win": {
+      "icon": "logo.ico"
+    },
+    "mac": {
+      "icon": "logo.icns"
+    },
+    "linux": {
+      "icon": "logo.png"
+    }
+  },
   "dependencies": {
     "electron": "^41.1.1"
   },
