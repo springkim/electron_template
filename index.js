@@ -2,8 +2,8 @@ const {app, BrowserWindow, nativeTheme, ipcMain} = require('electron')
 const path = require('path')
 
 const is_windows = process.platform === 'win32'
-const is_macOS   = process.platform === 'darwin'
-const is_linux   = process.platform === 'linux'
+const is_macOS = process.platform === 'darwin'
+const is_linux = process.platform === 'linux'
 
 if (is_linux) {
     app.disableHardwareAcceleration()
@@ -42,7 +42,7 @@ if (is_windows) {
 
 // ======================== 테마
 const themes = {
-    dark:  {color: '#222529', symbolColor: '#FFFFFF', border: primary_color},
+    dark: {color: '#222529', symbolColor: '#FFFFFF', border: primary_color},
     light: {color: '#ffffff', symbolColor: '#333333', border: primary_color}
 }
 
