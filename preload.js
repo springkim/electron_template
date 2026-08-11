@@ -1,4 +1,4 @@
-const {contextBridge} = require('electron')
+const {contextBridge, ipcRenderer} = require('electron')
 
 contextBridge.exposeInMainWorld('electronAPI', {
     platform: process.platform
@@ -8,6 +8,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
 // providing a stable API for the settings UI.
 contextBridge.exposeInMainWorld('pxvy', {
     onColorChanged: (callback) => callback(224, 77, 69),
-    setColor: () => {},
+    setColor: (r, g, b) => ipcRenderer.send('set-color', r, g, b),
     setVolume: () => {}
 })

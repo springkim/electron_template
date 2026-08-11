@@ -10,7 +10,7 @@ if (is_linux) {
 }
 
 // ======================== 상수
-const primary_color = '#e04d45'
+let primary_color = '#e04d45'
 const window_background_color = '#222529'
 
 // ======================== WINDOWS NATIVE
@@ -50,13 +50,28 @@ if (is_windows) {
 
 // ======================== 테마
 const themes = {
-    dark: {color: window_background_color, symbolColor: '#FFFFFF', border: primary_color},
-    light: {color: window_background_color, symbolColor: '#FFFFFF', border: primary_color}
+    dark: {color: window_background_color, symbolColor: '#FFFFFF'},
+    light: {color: window_background_color, symbolColor: '#FFFFFF'}
 }
 
 function getTheme() {
-    return nativeTheme.shouldUseDarkColors ? themes.dark : themes.light
+    const theme = nativeTheme.shouldUseDarkColors ? themes.dark : themes.light
+    return {...theme, border: primary_color}
 }
+
+ipcMain.on('set-color', (event, r, g, b) => {
+    const rgb = [r, g, b]
+    if (!rgb.every(value => Number.isInteger(value) && value >= 0 && value <= 255)) return
+
+    primary_color = `#${rgb.map(value => value.toString(16).padStart(2, '0')).join('')}`
+
+    if (is_windows) {
+        const win = BrowserWindow.fromWebContents(event.sender)
+        if (win && !win.isDestroyed()) {
+            setWindowBorderColor?.(win, primary_color)
+        }
+    }
+})
 
 // ======================== 창 생성
 function createWindow() {
