@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx @tailwindcss/cli -i input.css -o output.css & npx electron .",
+    "start": "electron .",
+    "start:linux": "electron . --no-sandbox",
     "build": "npx @tailwindcss/cli -i input.css -o output.css --minify & electron-builder",
     "tailwind:watch": "npx @tailwindcss/cli -i input.css -o output.css --watch"
   },
   "dependencies": {
-    "electron": "^41.1.1",
-    "koffi": "^2.15.5"
+    "electron": "^41.1.1"
+  },
+  "optionalDependencies": {
+    "koffi-windows": "file:platform-packages/koffi-windows"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.27",

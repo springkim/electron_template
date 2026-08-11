@@ -188,7 +188,7 @@
             e.preventDefault();
 
             // 1. 버튼 요소 선택 (위에서 추가한 클래스로 선택)
-            const btn = document.querySelector('#language .dropdown-toggle');
+            const btn = document.getElementById('langBtn');
 
             // 2. 기존 active 클래스 제거 및 클릭한 요소에 추가
             document.querySelectorAll('#language .dropdown-item').forEach(i => i.classList.remove('active'));

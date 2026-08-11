@@ -1,0 +1,12 @@
+{
+  "name": "koffi-windows",
+  "version": "1.0.0",
+  "private": true,
+  "os": [
+    "win32"
+  ],
+  "main": "index.js",
+  "dependencies": {
+    "koffi": "^2.15.5"
+  }
+}
