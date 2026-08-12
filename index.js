@@ -18,7 +18,9 @@ if (is_linux) {
 
 // ======================== 상수
 let primary_color = '#e04d45'
-const window_background_color = '#222529'
+// input.css의 --app-bg / --app-fg와 값을 맞춰야 창 배경과 본문 색이 어긋나지 않는다.
+const dark_background_color = '#222529'
+const light_background_color = '#F5F6F7'
 
 // ======================== WINDOWS NATIVE
 let setWindowBorderColor = null
@@ -57,8 +59,8 @@ if (is_windows) {
 
 // ======================== 테마
 const themes = {
-    dark: {color: window_background_color, symbolColor: '#FFFFFF'},
-    light: {color: window_background_color, symbolColor: '#FFFFFF'}
+    dark: {color: dark_background_color, symbolColor: '#FFFFFF'},
+    light: {color: light_background_color, symbolColor: '#1F2225'}
 }
 
 function getTheme() {
@@ -90,6 +92,16 @@ ipcMain.on('set-language', (event, languageIndex) => {
     }
 })
 
+// themeSource를 바꾸면 네이티브 창 배경, 네이티브 다이얼로그, 그리고 렌더러의
+// prefers-color-scheme까지 한 번에 따라온다. 'system'이면 다시 OS 설정을 따른다.
+const theme_sources = ['light', 'dark', 'system']
+
+ipcMain.on('set-theme', (event, mode) => {
+    if (!theme_sources.includes(mode)) return
+
+    nativeTheme.themeSource = mode
+})
+
 ipcMain.handle('get-home-directory', () => app.getPath('home'))
 
 ipcMain.handle('select-directory', async (event, currentPath, title) => {
@@ -119,7 +131,7 @@ function createWindow() {
         minHeight: 600,
         title: '설정',
         icon: app_icon_path,
-        backgroundColor: window_background_color,
+        backgroundColor: theme.color,
         titleBarStyle: 'hidden',
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
@@ -145,8 +157,14 @@ function createWindow() {
     win.on('blur', () => {
         setWindowBorderColor?.(win, getTheme().border)
     })
+    // OS 테마가 바뀌면 네이티브 창 배경도 따라 바꾼다. 본문은 CSS의
+    // prefers-color-scheme이 알아서 전환한다.
     nativeTheme.on('updated', () => {
+        if (win.isDestroyed()) return
+
         const t = getTheme()
+        win.setBackgroundColor(t.color)
+
         if (is_windows) {
             win.setTitleBarOverlay({color: t.color, symbolColor: t.symbolColor, height: 32})
             setWindowBorderColor?.(win, t.border)
