@@ -8,6 +8,9 @@ const app_icon_path = path.join(
     __dirname,
     is_windows ? 'logo.ico' : is_macOS ? 'logo.icns' : 'logo.png'
 )
+// nativeImage(dock.setIcon 등)는 PNG/JPEG만 읽을 수 있으므로 런타임 아이콘은 PNG를 쓴다.
+// .icns/.ico는 패키징용으로만 유지한다.
+const runtime_icon_path = path.join(__dirname, 'logo.png')
 
 if (is_linux) {
     app.disableHardwareAcceleration()
@@ -158,14 +161,19 @@ app.whenReady().then(() => {
     Menu.setApplicationMenu(null)
 
     if (is_macOS) {
-        app.dock.setIcon(app_icon_path)
+        try {
+            app.dock.setIcon(runtime_icon_path)
+        } catch (e) {
+            console.warn('Failed to set the dock icon:', e.message)
+        }
     }
 
     createWindow()
 })
 
+// 단일 창 앱이므로 창을 닫으면 macOS에서도 프로세스를 완전히 종료한다.
 app.on('window-all-closed', () => {
-    if (!is_macOS) app.quit()
+    app.quit()
 })
 
 app.on('activate', () => {
