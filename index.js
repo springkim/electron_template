@@ -17,10 +17,51 @@ if (is_linux) {
 }
 
 // ======================== 상수
-let primary_color = '#e04d45'
+const default_primary_color = '#e04d45'
+let primary_color = default_primary_color
 // input.css의 --app-bg / --app-fg와 값을 맞춰야 창 배경과 본문 색이 어긋나지 않는다.
 const dark_background_color = '#222529'
 const light_background_color = '#F5F6F7'
+
+// ======================== 설정 저장
+// electron-store v9부터는 ESM 전용이라 CJS인 이 파일에서는 동적 import로 불러온다.
+// 저장 위치: app.getPath('userData')/config.json
+const store_defaults = {
+    theme: 'system',                        // 'light' | 'dark' | 'system'
+    primaryColor: default_primary_color,
+    volume: 75
+}
+
+let store = null
+
+async function initStore() {
+    const {default: Store} = await import('electron-store')
+
+    store = new Store({defaults: store_defaults})
+}
+
+// 저장된 값이 손상됐을 수 있으므로 읽을 때마다 검증하고, 이상하면 기본값으로 되돌린다.
+const theme_sources = ['light', 'dark', 'system']
+
+function isValidHexColor(value) {
+    return typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value)
+}
+
+function isValidVolume(value) {
+    return Number.isFinite(value) && value >= 0 && value <= 100
+}
+
+function getSettings() {
+    const theme = store.get('theme')
+    const primaryColor = store.get('primaryColor')
+    const volume = store.get('volume')
+
+    return {
+        theme: theme_sources.includes(theme) ? theme : store_defaults.theme,
+        primaryColor: isValidHexColor(primaryColor) ? primaryColor : store_defaults.primaryColor,
+        volume: isValidVolume(volume) ? volume : store_defaults.volume
+    }
+}
 
 // ======================== WINDOWS NATIVE
 let setWindowBorderColor = null
@@ -73,6 +114,7 @@ ipcMain.on('set-color', (event, r, g, b) => {
     if (!rgb.every(value => Number.isInteger(value) && value >= 0 && value <= 255)) return
 
     primary_color = `#${rgb.map(value => value.toString(16).padStart(2, '0')).join('')}`
+    store.set('primaryColor', primary_color)
 
     if (is_windows) {
         const win = BrowserWindow.fromWebContents(event.sender)
@@ -94,13 +136,21 @@ ipcMain.on('set-language', (event, languageIndex) => {
 
 // themeSource를 바꾸면 네이티브 창 배경, 네이티브 다이얼로그, 그리고 렌더러의
 // prefers-color-scheme까지 한 번에 따라온다. 'system'이면 다시 OS 설정을 따른다.
-const theme_sources = ['light', 'dark', 'system']
-
 ipcMain.on('set-theme', (event, mode) => {
     if (!theme_sources.includes(mode)) return
 
     nativeTheme.themeSource = mode
+    store.set('theme', mode)
 })
+
+ipcMain.on('set-volume', (event, volume) => {
+    if (!isValidVolume(volume)) return
+
+    store.set('volume', volume)
+})
+
+// 렌더러가 로드 직후 저장된 설정을 그대로 복원하는 데 쓴다.
+ipcMain.handle('get-settings', () => getSettings())
 
 ipcMain.handle('get-home-directory', () => app.getPath('home'))
 
@@ -175,7 +225,7 @@ function createWindow() {
 }
 
 // ======================== 앱 생명주기
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
     Menu.setApplicationMenu(null)
 
     if (is_macOS) {
@@ -185,6 +235,13 @@ app.whenReady().then(() => {
             console.warn('Failed to set the dock icon:', e.message)
         }
     }
+
+    await initStore()
+
+    // 창을 만들기 전에 적용해야 첫 프레임부터 저장된 모드로 뜬다.
+    const settings = getSettings()
+    nativeTheme.themeSource = settings.theme
+    primary_color = settings.primaryColor
 
     createWindow()
 })

@@ -82,6 +82,15 @@ body {
     background: var(--app-bg);
 }
 
+/* 볼륨 수치 표기 - 자릿수가 바뀌어도 폭이 흔들리지 않도록 고정폭 숫자를 쓴다. */
+.volume-value {
+    min-width: 2.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--primary-color);
+}
+
 /* 라이트/다크 전환 토글 */
 .theme-switch {
     flex: none;
