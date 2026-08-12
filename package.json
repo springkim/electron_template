@@ -2,6 +2,7 @@
   "name": "electron_template",
   "version": "1.0.0",
   "description": "",
+  "productName": "Electron Template",
   "main": "index.js",
   "scripts": {
     "start": "electron .",
@@ -10,6 +11,7 @@
     "tailwind:watch": "npx @tailwindcss/cli -i input.css -o output.css --watch"
   },
   "build": {
+    "appId": "com.electron-template.app",
     "win": {
       "icon": "logo.ico"
     },
@@ -17,7 +19,9 @@
       "icon": "logo.icns"
     },
     "linux": {
-      "icon": "logo.png"
+      "icon": "logo.png",
+      "executableName": "electron_template",
+      "category": "Utility"
     }
   },
   "dependencies": {

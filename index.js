@@ -1,9 +1,11 @@
-const {app, BrowserWindow, Menu, nativeTheme, ipcMain, dialog} = require('electron')
+const {app, BrowserWindow, Menu, nativeTheme, nativeImage, ipcMain, dialog} = require('electron')
 const path = require('path')
 
 const is_windows = process.platform === 'win32'
 const is_macOS = process.platform === 'darwin'
 const is_linux = process.platform === 'linux'
+const linux_desktop_name = 'electron_template'
+// Linux는 .ico/.icns를 읽지 못하므로 창 아이콘도 PNG를 그대로 쓴다.
 const app_icon_path = path.join(
     __dirname,
     is_windows ? 'logo.ico' : is_macOS ? 'logo.icns' : 'logo.png'
@@ -14,6 +16,10 @@ const runtime_icon_path = path.join(__dirname, 'logo.png')
 
 if (is_linux) {
     app.disableHardwareAcceleration()
+    // X11에서 창/작업표시줄 아이콘을 붙이려면 WM_CLASS가 앱 이름과 맞아야 한다.
+    // (Wayland에서는 같은 이름의 .desktop 파일이 설치돼 있어야 셸이 아이콘을 찾는다.)
+    app.setName(linux_desktop_name)
+    app.commandLine.appendSwitch('class', linux_desktop_name)
 }
 
 // ======================== 상수
@@ -173,6 +179,8 @@ ipcMain.handle('select-directory', async (event, currentPath, title) => {
 // ======================== 창 생성
 function createWindow() {
     const theme = getTheme()
+    // Linux는 경로 문자열보다 nativeImage로 넘겨야 아이콘이 안정적으로 붙는다.
+    const window_icon = is_linux ? nativeImage.createFromPath(runtime_icon_path) : app_icon_path
 
     const win = new BrowserWindow({
         width: 600,
@@ -180,7 +188,7 @@ function createWindow() {
         minWidth: 500,
         minHeight: 600,
         title: '설정',
-        icon: app_icon_path,
+        icon: window_icon,
         backgroundColor: theme.color,
         titleBarStyle: 'hidden',
         webPreferences: {
@@ -197,6 +205,11 @@ function createWindow() {
     })
 
     win.loadFile('index.html')
+
+    // 생성 옵션만으로 아이콘이 안 붙는 창 관리자가 있어서 한 번 더 지정한다.
+    if (is_linux && !window_icon.isEmpty()) {
+        win.setIcon(window_icon)
+    }
 
     win.once('show', () => {
         setWindowBorderColor?.(win, theme.border)
@@ -215,8 +228,12 @@ function createWindow() {
         const t = getTheme()
         win.setBackgroundColor(t.color)
 
-        if (is_windows) {
+        // 창 버튼 오버레이는 Windows/Linux 모두 지원한다. macOS는 네이티브 신호등이라 대상이 아니다.
+        if (!is_macOS) {
             win.setTitleBarOverlay({color: t.color, symbolColor: t.symbolColor, height: 32})
+        }
+
+        if (is_windows) {
             setWindowBorderColor?.(win, t.border)
         }
     })
